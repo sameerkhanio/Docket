@@ -35,27 +35,7 @@ Docket is the serverless project in my AWS portfolio. It is a counterpart to my 
 
 ## Architecture
 
-```
-                    ┌────────────┐
-                    │  Frontend  │
-                    └─────┬──────┘
-                          │  HTTPS
-                          ▼
-                 ┌─────────────────┐        ┌──────────────────┐
-                 │   API Gateway   │───────▶│  jwtauthorizer   │
-                 │   (6 methods)   │◀───────│  (Lambda)        │
-                 └───────┬─────────┘        └──────────────────┘
-                         │
-      ┌──────────┬───────┼─────────┬────────────┬────────────┐
-      ▼          ▼       ▼         ▼            ▼            ▼
-   signup     login  createfile  getfile   updatefile   deletefile
-   (Lambda)  (Lambda) (Lambda)  (Lambda)   (Lambda)     (Lambda)
-      │          │       └─────────┴────────────┴────────────┘
-      ▼          ▼                          │
- ┌────────────────────┐             ┌───────────────┐
- │  DynamoDB: users   │             │ DynamoDB: docs│
- └────────────────────┘             └───────────────┘
-```
+![Architecture](Screenshots/docketarchitecture.png)
 
 **Request flow**
 
