@@ -11,9 +11,9 @@ Users sign up, log in, and manage their own documents through a JWT-secured REST
 
 ## Screenshots
 
-| Login / Signup | Welcome Screen | Documents |
+| Login / Signup | Documents | Create Document |
 |---|---|---|
-| ![Login](Screenshots/docketlogin.png) | ![Welcome](Screenshots/docketentry.png) | ![Documents](Screenshots/filledfiledocket.png) |
+| ![Login](Screenshots/docketlogin.png) | ![Documents](Screenshots/filledfiledocket.png) | ![Create-Document](Screenshots/writedocdocket.png) |
 
 More screenshots of AWS Services are available in the [screenshots](Screenshots/) folder
 
