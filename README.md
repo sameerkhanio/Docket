@@ -5,7 +5,7 @@
 Users sign up, log in, and manage their own documents through a JWT-secured REST API. There are no servers to provision or patch, and it scales on demand.
 
 
-**Live demo: d1xq24fvl0yoc5.cloudfront.net**
+**Live demo: https://d1xq24fvl0yoc5.cloudfront.net**
 
 ---
 
@@ -15,7 +15,7 @@ Users sign up, log in, and manage their own documents through a JWT-secured REST
 |---|---|---|
 | ![Login](Screenshots/docketlogin.png) | ![Welcome](Screenshots/docketentry.png) | ![Documents](Screenshots/filledfiledocket.png) |
 
-More screenshots are available in the [screenshots](Screenshots/) folder
+More screenshots of AWS Services are available in the [screenshots](Screenshots/) folder
 
 ---
 
