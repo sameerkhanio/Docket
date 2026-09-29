@@ -13,7 +13,7 @@ Users sign up, log in, and manage their own documents through a JWT-secured REST
 
 | Login / Signup | Welcome Screen | Documents |
 |---|---|---|
-| ![Login](screenshots/docketlogin.png) | ![Welcome](screenshots/docketentry.png) | ![Documents](screenshots/filledfiledocket.png) |
+| ![Login](Screenshots/docketlogin.png) | ![Welcome](Screenshots/docketentry.png) | ![Documents](Screenshots/filledfiledocket.png) |
 
 More screenshots are available in the [screenshots](screenshots/) folder
 
