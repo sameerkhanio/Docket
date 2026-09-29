@@ -15,7 +15,7 @@ Users sign up, log in, and manage their own documents through a JWT-secured REST
 |---|---|---|
 | ![Login](Screenshots/docketlogin.png) | ![Welcome](Screenshots/docketentry.png) | ![Documents](Screenshots/filledfiledocket.png) |
 
-More screenshots are available in the [Screenshots](screenshots/) folder
+More screenshots are available in the [screenshots](Screenshots/) folder
 
 ---
 
