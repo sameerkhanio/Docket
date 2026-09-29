@@ -191,8 +191,7 @@ More projects from my AWS portfolio:
 
 1. **Task Manager:** Django app on VPC + EC2 + Auto Scaling + ALB + RDS (traditional server-based architecture)
 2. **Docket** (this project): fully serverless architecture
-3. **Static Site:** S3 + CloudFront (SSL) + Route 53 custom domain
-4. **Thumbly:** serverless image processing pipeline with S3 events, Lambda and Pillow
+3. **Thumbly:** serverless image processing pipeline with S3 events/static-site, Lambda, Pillow, CloudFront (SSL) + Route 53 custom domain
 
 ---
 
