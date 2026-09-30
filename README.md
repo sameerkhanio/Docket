@@ -35,7 +35,7 @@ Docket is the serverless project in my AWS portfolio. It is a counterpart to my 
 
 ## Architecture
 
-![Architecture](Screenshots/docketarchitecture.png)
+![Architecture](Screenshots/docketArchitecture.png)
 
 **Request flow**
 
