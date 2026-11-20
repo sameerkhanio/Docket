@@ -1,23 +1,16 @@
-
 # Docket
 
-**A serverless document management app built on AWS.**
-Users sign up, log in, and manage their own documents through a JWT-secured REST API. There are no servers to provision or patch, and it scales on demand.
+A serverless document management app built on AWS. Users sign up, log in, and manage their own documents through a JWT-secured REST API. There are no servers to provision or patch, and it scales on demand.
 
-
-**Live demo: https://d1xq24fvl0yoc5.cloudfront.net**
-
----
+**Live demo:** https://d3164abu70erxh.cloudfront.net
 
 ## Screenshots
 
 | Login / Signup | Documents | Create Document |
 |---|---|---|
-| ![Login](Screenshots/docketlogin.png) | ![Documents](Screenshots/filledfiledocket.png) | ![Create-Document](Screenshots/writedocdocket.png) |
+| ![Login](screenshots/docketlogin.png) | ![Documents](screenshots/filledfiledocket.png) | ![Create Document](screenshots/writedocdocket.png) |
 
-More screenshots of AWS Services are available in the [screenshots](Screenshots/) folder
-
----
+More screenshots of the AWS services (S3, CloudFront, API Gateway, Lambda, DynamoDB) are available in the `screenshots` folder.
 
 ## Overview
 
@@ -30,59 +23,56 @@ Docket is the serverless project in my AWS portfolio. It is a counterpart to my 
 - Full CRUD for documents (create, read, update, delete)
 - Every protected route is verified by a dedicated Lambda authorizer
 - Per-user data, split across two DynamoDB tables
-
----
+- Static frontend hosted in a private S3 bucket and delivered through CloudFront over HTTPS
 
 ## Architecture
 
-![Architecture](Screenshots/docketArchitecture.png)
+![Architecture](screenshots/docket-architecture.png)
 
 **Request flow**
 
-1. The user signs up or logs in. Signup and login are public routes.
+1. The user signs up. The frontend then logs the user in automatically to obtain a JWT. Signup and login are public routes.
 2. On a successful login, the API returns a signed JWT.
 3. The frontend sends the token with every document request.
-4. API Gateway calls `jwtauthorizer` first. Invalid or missing tokens are rejected before any business logic runs.
+4. API Gateway calls `DocketJWTAuthorizer` first. Invalid or missing tokens are rejected before any business logic runs.
 5. If the token is valid, the matching Lambda reads or writes the `docs` table.
-
----
 
 ## AWS Services
 
 | Service | Role |
 |---|---|
-| **API Gateway** | REST API with 6 methods, single entry point for the frontend |
-| **Lambda** | 7 functions containing all backend logic |
-| **DynamoDB** | Two tables: `users` and `docs` |
-| **IAM** | Least-privilege execution roles for each function |
-| **CloudWatch** | Logs and debugging for Lambda and API Gateway |
-
----
+| S3 | Hosts the static frontend (private bucket, accessible only through CloudFront) |
+| CloudFront | Serves the frontend over HTTPS using Origin Access Control (OAC) |
+| API Gateway | REST API with 6 methods, single entry point for the frontend |
+| Lambda | 7 functions (Python 3.12) containing all backend logic |
+| DynamoDB | Two tables: `users` and `docs` |
+| IAM | Least-privilege execution roles for each function |
+| CloudWatch | Logs and debugging for Lambda and API Gateway |
 
 ## Lambda Functions
 
 | Function | Purpose | Auth required |
-|---|---|:---:|
-| `signup` | Creates a new user in the `users` table | No |
-| `login` | Verifies credentials and issues a JWT | No |
-| `createfile` | Creates a new document | Yes |
-| `getfile` | Retrieves the user's document(s) | Yes |
-| `updatefile` | Updates an existing document | Yes |
-| `deletefile` | Deletes a document | Yes |
-| `jwtauthorizer` | Validates the JWT and authorizes each protected request | n/a |
-
----
+|---|---|---|
+| `UserSignup` | Creates a new user in the users table | No |
+| `UserLogin` | Verifies credentials and issues a JWT | No |
+| `CreateFiles` | Creates a new document | Yes |
+| `GetFiles` | Retrieves the user's document(s) | Yes |
+| `UpdateFiles` | Updates an existing document | Yes |
+| `DeleteFiles` | Deletes a document | Yes |
+| `DocketJWTAuthorizer` | Validates the JWT and authorizes each protected request | n/a |
 
 ## API Endpoints
 
+Stage: `dev`
+
 | Method | Route | Lambda | Auth |
-|---|---|---|:---:|
-| `POST` | `/signup` | `signup` | No |
-| `POST` | `/login` | `login` | No |
-| `POST` | `/files` | `createfile` | Yes |
-| `GET` | `/files` | `getfile` | Yes |
-| `PUT` | `/files/{id}` | `updatefile` | Yes |
-| `DELETE` | `/files/{id}` | `deletefile` | Yes |
+|---|---|---|---|
+| POST | `/signup` | `UserSignup` | No |
+| POST | `/login` | `UserLogin` | No |
+| POST | `/create-file` | `CreateFiles` | Yes |
+| GET | `/get-files` | `GetFiles` | Yes |
+| PUT | `/update-files` | `UpdateFiles` | Yes |
+| DELETE | `/delete-files` | `DeleteFiles` | Yes |
 
 Protected routes expect the header:
 
@@ -92,23 +82,22 @@ Authorization: Bearer <jwt-token>
 
 **Example: login**
 
-```http
+```
 POST /login
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
+  "Email": "user@example.com",
   "password": "your-password"
 }
 ```
 
 ```json
 {
-  "token": "<jwt-token>"
+  "token": "<jwt-token>",
+  "name": "User Name"
 }
 ```
-
----
 
 ## Data Model
 
@@ -131,20 +120,17 @@ Content-Type: application/json
 | `updatedAt` | String | Last modified timestamp |
 | `UserName` | String | Owner's name, stored with the document |
 
----
-
 ## Frontend
 
-The frontend is gated behind authentication:
+The static frontend (HTML, CSS, JavaScript) is hosted in a private S3 bucket and delivered through CloudFront with Origin Access Control, so the bucket itself is never public. It is gated behind authentication:
 
-1. The service is locked behind a single entry button.
-2. Clicking it opens a signup / login form.
-3. After a successful login, a welcome screen greets the user by name.
-4. The document service then unlocks.
+- The service is locked behind a single entry button.
+- Clicking it opens a signup / login form.
+- After signup, the app logs the user in automatically and stores the JWT.
+- A welcome screen greets the user by name.
+- The document service then unlocks.
 
-**Stack:** HTML, CSS, JavaScript
-
----
+Stack: HTML, CSS, JavaScript
 
 ## Getting Started
 
@@ -152,48 +138,47 @@ The frontend is gated behind authentication:
 
 - An AWS account
 - AWS CLI configured (`aws configure`)
-- TODO: name the runtime your Lambdas use (Python or Node.js)
+- Python 3.12 (Lambda runtime)
 
 ### Deployment
 
-1. **Create the DynamoDB tables:** `users` and `docs`.
-2. **Create the 7 Lambda functions** and attach an IAM role with access to the required tables and CloudWatch Logs.
-3. **Set environment variables** on the Lambdas (see below).
-4. **Create the API Gateway** REST API, add the 6 methods, and integrate each with its Lambda.
-5. **Attach `jwtauthorizer`** as a Lambda authorizer on the protected methods.
-6. **Deploy the API** to a stage and copy the invoke URL.
-7. **Set the API URL** in the frontend config and open the app.
+1. Create the DynamoDB tables: `users` and `docs`.
+2. Create the 7 Lambda functions (Python 3.12) and attach an IAM role with access to the required tables and CloudWatch Logs.
+3. Set environment variables on the Lambdas (see below).
+4. Create the API Gateway REST API, add the 6 methods, and integrate each with its Lambda.
+5. Attach `DocketJWTAuthorizer` as a Lambda authorizer on the protected methods.
+6. Enable CORS on the API routes, then deploy the API to a stage (`dev`) and copy the invoke URL.
+7. Set the API URL in the frontend config.
+8. Create a private S3 bucket and upload the frontend files (`index.html` at the bucket root).
+9. Create a CloudFront distribution with the S3 bucket as origin using Origin Access Control (OAC), set `index.html` as the default root object, and apply the bucket policy CloudFront generates.
+10. Open the CloudFront URL. After updating frontend files, create an invalidation (`/*`) so CloudFront serves the latest version.
 
 ### Environment Variables
 
 | Variable | Used by | Description |
 |---|---|---|
-| `JWT_SECRET` | `login`, `jwtauthorizer` | Secret used to sign and verify tokens |
-| `USERS_TABLE` | `signup`, `login` | Name of the users table |
-| `DOCS_TABLE` | file functions | Name of the docs table |
+| `JWT_SECRET` | `UserLogin`, `DocketJWTAuthorizer` | Secret used to sign and verify tokens |
+| `USERS_TABLE` | `UserSignup`, `UserLogin` | Name of the users table |
+| `DOCS_TABLE` | File functions | Name of the docs table |
 
-> Never commit secrets to the repository.
-
----
+Never commit secrets to the repository.
 
 ## Security
 
 - Stateless JWT authentication, verified centrally by a Lambda authorizer
 - Protected routes are rejected at the API Gateway layer before reaching business logic
+- The user's identity comes from the verified token, not from client-supplied input
 - Passwords are stored as hashes, never in plain text
 - IAM roles scoped per function
-
----
+- Frontend bucket is private and reachable only through CloudFront (OAC), served over HTTPS
 
 ## Related Projects
 
 More projects from my AWS portfolio:
 
-1. **Task Manager:** Django app on VPC + EC2 + Auto Scaling + ALB + RDS (traditional server-based architecture)
-2. **Docket** (this project): fully serverless architecture
-3. **Thumbly:** serverless image processing pipeline with S3 events/static-site, Lambda, Pillow, CloudFront (SSL) + Route 53 custom domain
-
----
+- **Task Manager:** Django app on VPC + EC2 + Auto Scaling + ALB + RDS (traditional server-based architecture)
+- **Docket (this project):** fully serverless architecture
+- **Thumbly:** serverless image processing pipeline with S3 events/static-site, Lambda, Pillow, CloudFront (SSL) + Route 53 custom domain
 
 ## Author
 
