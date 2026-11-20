@@ -421,6 +421,11 @@ authForm.addEventListener(
 
       if (result.ok) {
 
+        if (!result.token) {
+    setMsg('Login failed, please try again.', 'error');
+    return;
+  }
+
   currentUser = {
 
     name:
@@ -583,6 +588,20 @@ async function realAuthCall(
   }
 
 
+  if (authMode === 'signup' && !data.token) {
+    const loginResult = await realAuthCall('login', { email, password });
+
+    if (!loginResult.ok) {
+      return {
+        ok: false,
+        message: 'Account created, but auto-login failed. Please log in.'
+      };
+    }
+
+    return { ...loginResult, name: loginResult.name || name };
+  }
+
+  
 return {
 
   ok:
