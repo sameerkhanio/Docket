@@ -8,7 +8,7 @@ A serverless document management app built on AWS. Users sign up, log in, and ma
 
 | Login / Signup | Documents | Create Document |
 |---|---|---|
-| ![Login](screenshots/docketlogin.png) | ![Documents](screenshots/filledfiledocket.png) | ![Create Document](screenshots/writedocdocket.png) |
+| ![Login](Screenshots/docketlogin.png) | ![Documents](Screenshots/filledfiledocket.png) | ![Create Document](Screenshots/writedocdocket.png) |
 
 More screenshots of the AWS services (S3, CloudFront, API Gateway, Lambda, DynamoDB) are available in the `screenshots` folder.
 
@@ -27,7 +27,7 @@ Docket is the serverless project in my AWS portfolio. It is a counterpart to my 
 
 ## Architecture
 
-![Architecture](screenshots/docket-architecture.png)
+![Architecture](Screenshots/docket-architecture.png)
 
 **Request flow**
 
